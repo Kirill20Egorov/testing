@@ -1,0 +1,37 @@
+http://links.qatl.ru/../links/locked.php - 423
+http://links.qatl.ru/../links/movedper.php - 301
+http://links.qatl.ru/../links/404not404found404.php - 404
+http://links.qatl.ru/../links/found302.php - 302
+http://links.qatl.ru/../links/return500bad.php - 500
+http://links.qatl.ru/../links/deny403forbidden.php - 403
+http://links.qatl.ru/../links/502gateaway502.php - 502
+http://links.qatl.ru/../links/teapot418.php - 500
+http://links.qatl.ru/../links/un503availible.php - 503
+http://links.qatl.ru/../links/access401unauthorized.php - 401
+Links count: 10
+Date: Thu Nov 10 2022 13:34:25 GMT+0300 (Москва, стандартное время)http://links.qatl.ru/../links/locked.php - 423
+http://links.qatl.ru/../links/movedper.php - 301
+http://links.qatl.ru/../links/404not404found404.php - 404
+http://links.qatl.ru/../links/found302.php - 302
+http://links.qatl.ru/../links/return500bad.php - 500
+http://links.qatl.ru/../links/deny403forbidden.php - 403
+http://links.qatl.ru/../links/502gateaway502.php - 502
+http://links.qatl.ru/../links/teapot418.php - 500
+http://links.qatl.ru/../links/un503availible.php - 503
+http://links.qatl.ru/../links/access401unauthorized.php - 401
+Links count: 10
+Date: Thu Nov 10 2022 13:35:00 GMT+0300 (Москва, стандартное время)http://links.qatl.ru/../links/locked.php - 423
+http://links.qatl.ru/../links/movedper.php - 301
+http://links.qatl.ru/../links/404not404found404.php - 404
+http://links.qatl.ru/../links/found302.php - 302
+http://links.qatl.ru/../links/return500bad.php - 500
+http://links.qatl.ru/../links/deny403forbidden.php - 403
+http://links.qatl.ru/../links/502gateaway502.php - 502
+http://links.qatl.ru/../links/teapot418.php - 500
+http://links.qatl.ru/../links/un503availible.php - 503
+http://links.qatl.ru/../links/access401unauthorized.php - 401
+Links count: 10
+Date: Thu Nov 10 2022 13:35:35 GMT+0300 (Москва, стандартное время)https://statler.ru/javascript:void(0) - 404
+https://statler.ru/viber://chat?number=%2B79635097555 - 404
+Links count: 2
+Date: Thu Nov 10 2022 13:36:35 GMT+0300 (Москва, стандартное время)
