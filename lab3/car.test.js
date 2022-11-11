@@ -2,164 +2,318 @@
 const { expect } = require('@jest/globals')
 const { Car, BACK, ONPLACE, STRAIGHT } = require('./car')
 
-car = new Car
 
-describe('Create a car and testing the engine', () => {
+
+beforeEach(() => {
+    car = new Car;
+});
+
+
+describe('Testing the engine', () => {
     
     test('At first car is turned off', () => {
         // act
-        let isEngineTurnOff = car.GetEngineState(); 
-
+        let isEngineTurnedOff = car.GetEngineState()
 
         // assert
-        expect(isEngineTurnOff).toBe(false)
+        expect(isEngineTurnedOff).toBe(false)
     })
 
-    test('If car is turned off and we call TurnOn should return true, and car will be turned on', () => {
-        let 
+    test('Try to turn off engine after starting', () => {
+        car.TurnOnEngine()
 
-        expect(car.TurnOffEngine()).toBe(false)
-        expect(car.TurnOnEngine()).toBe(true)
-        expect(car.GetEngineState()).toBe(true)
-        expect(car.TurnOnEngine()).toBe(false)
-        expect(car.TurnOffEngine()).toBe(true)
+        let isEngineTurnedOff = car.TurnOffEngine()
+
+        expect(isEngineTurnedOff).toBe(true)
     })
+
+    test('Check direction', () => {
+        // arrange
+        let carDirection
+
+        // act
+        carDirection = car.GetDirection()
+
+        // assert
+        expect(carDirection).toBe(ONPLACE)
+    })
+
+    test('Check gear', () => {
+        let carGear
+
+        carGear = car.GetGear()
+
+        expect(carGear).toBe(0)
+    })
+
+    test('Check speed', () => {
+        let carSpeed
+
+        carSpeed = car.GetSpeed()
+
+        expect(carSpeed).toBe(0)
+    })
+
+    test('Try turn off engine while engine is turned off', () => {
+        let tryOffEngine = car.TurnOffEngine() 
+
+        expect(tryOffEngine).toBe(false)
+    })
+
+    test('Try turn on engine after starting engine', () => {
+        car.TurnOnEngine()
+
+        let tryTurnOnEngine = car.TurnOnEngine()
+
+        expect(tryTurnOnEngine).toBe(false)
+    })
+
 })
 
-describe('Start the engine and check params when the car stay on place', () => {
+describe('Check car params onplace', () => {
 
-    test('Check params of car after starting engine', () => {
-        expect(car.TurnOnEngine()).toBe(true)
-        expect(car.GetSpeed()).toBe(0)
-        expect(car.GetGear()).toBe(0)
-        expect(car.GetDirection()).toBe(ONPLACE)
+    test('Check back gear', () => {
+        car.TurnOnEngine()
+       
+        let isBackGear = car.SetGear(-1)
+
+        expect(isBackGear).toBe(true)
     })
 
+    test('Check first gear', () => {
+        car.TurnOnEngine()
 
-    test('If car is turned on we try transmission onplace and check direction and other params', () => {
-        expect(car.SetGear(-1)).toBe(true)
-        expect(car.GetGear()).toBe(-1)
-        expect(car.GetSpeed()).toBe(0)
-        expect(car.GetDirection()).toBe(ONPLACE)
-        expect(car.SetGear(0)).toBe(true)
-        expect(car.SetGear(1)).toBe(true)
-        expect(car.GetDirection()).toBe(ONPLACE)
-        expect(car.GetSpeed()).toBe(0)
-        expect(car.GetGear()).toBe(1)
+        isFirstGear = car.SetGear(1);
+
+        expect(isFirstGear).toBe(true)
     })
 
-    test('If car stay on place we cant set speed in neutral gear', () => {
-        expect(car.SetGear(0)).toBe(true)
-        expect(car.SetSpeed(1)).toBe(false)
-        expect(car.SetSpeed(-1)).toBe(false)
-        expect(car.GetDirection()).toBe(ONPLACE)
+    test('We cant set speed in neutral gear', () => {
+        car.TurnOnEngine()
+        
+        let isSetedSpeed = car.SetSpeed(15)
+
+        expect(isSetedSpeed).toBe(false)
     })
 
-    test('We cant turn on the gears >= 1 when we havent speed', () => {
-        expect(car.SetGear(2)).toBe(false)
-        expect(car.SetGear(3)).toBe(false)
-        expect(car.SetGear(4)).toBe(false)
-        expect(car.SetGear(5)).toBe(false)
+    test('We cant set 2 gear without speed', () => {
+        car.TurnOnEngine()
+
+        let isSecondGear = car.SetGear(2)
+
+        expect(isSecondGear).toBe(false)
     })
+
 })
 
-describe('Check driving with back direction', () => {
+describe('Check car params with back direction', () => {
 
     test('Try to set speed with back gear', () => {
-        expect(car.SetGear(-1)).toBe(true)
-        expect(car.SetSpeed(15)).toBe(true)
-        expect(car.SetSpeed(-10)).toBe(false)
-        expect(car.GetDirection()).toBe(BACK)
-        expect(car.SetSpeed(21)).toBe(false)
-        expect(car.SetGear(-2)).toBe(false)
+        car.TurnOnEngine()
+        car.SetGear(-1)
+
+        let isSetSomeSpeed = car.SetSpeed(20)
+
+        expect(isSetSomeSpeed).toBe(true)
     })
 
-    test('Try to set other gears while going back', () => {
-        expect(car.SetGear(0)).toBe(true)
-        expect(car.SetGear(1)).toBe(false)
-        expect(car.SetGear(5)).toBe(false)
+    test('Try to set gear 1 while going back', () => {
+        car.TurnOnEngine()
+        car.SetGear(-1)
+        car.SetSpeed(10)
+
+        let isSetedGear = car.SetGear(1)
+
+        expect(isSetedGear).toBe(false)
     })
-    
-    test('Try to set speed while > curr and < curr going back with neutral', () => {
-        expect(car.SetSpeed(17)).toBe(false)
-        expect(car.SetSpeed(0)).toBe(true)
-        expect(car.SetGear(1)).toBe(true)
+
+    test('Try to set speed while speed > curr with neutral gear', () => {
+        car.TurnOnEngine()
+        car.SetGear(-1)
+        car.SetSpeed(15)
+        car.SetGear(0)
+
+        let isSetedSpeed = car.SetSpeed(16)
+
+        expect(isSetedSpeed).toBe(false)
+    })
+
+    test('Try to set speed while speed < curr with neutral gear', () => {
+        car.TurnOnEngine()
+        car.SetGear(-1)
+        car.SetSpeed(15)
+        car.SetGear(0)
+
+        let isSetedSpeed = car.SetSpeed(10)
+
+        expect(isSetedSpeed).toBe(true)
     })
 })
+
 
 describe('Check driving with straight direction', () => {
 
-    test('Try to set speed with 1', () => {
-        expect(car.SetSpeed(30)).toBe(true)
-        expect(car.SetSpeed(-10)).toBe(false)
-        expect(car.GetDirection()).toBe(STRAIGHT)
+    test('Try to check direction while speed > 0 and gear > 0', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(10)
+
+        let carDirection = car.GetDirection()
+
+        expect(carDirection).toBe(STRAIGHT)
     })
 
-    test('Try to set other gears while going straight', () => {
-        expect(car.SetGear(0)).toBe(true)
-        expect(car.SetGear(-1)).toBe(false)
-        expect(car.SetGear(5)).toBe(false)
+    test('Try to check direction while car is stopped', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(10)
+        car.SetGear(0)
+        car.SetSpeed(0)
+
+        let carDirection = car.GetDirection()
+
+        expect(carDirection).toBe(ONPLACE)
     })
 
-    test('Try to set speed while > curr and < curr going back with neutral', () => {
-        expect(car.SetSpeed(31)).toBe(false)
-        expect(car.SetSpeed(0)).toBe(true)
-        expect(car.GetDirection()).toBe(ONPLACE)
+    test('Try to set speed with 1 gear', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+
+        let isSetedSpeed = car.SetSpeed(10)
+
+        expect(isSetedSpeed).toBe(true)
     })
 
-    test('Give more speed and check other gears', () => {
-        expect(car.SetGear(1)).toBe(true)
-        expect(car.SetSpeed(30)).toBe(true)
-        expect(car.SetGear(2)).toBe(true)
-        expect(car.SetSpeed(40)).toBe(true)
-        expect(car.SetGear(0)).toBe(true)
-        expect(car.SetGear(3)).toBe(true)
-        expect(car.SetGear(0)).toBe(true)
-        expect(car.SetGear(3)).toBe(true)
-        expect(car.SetSpeed(50)).toBe(true)
-        expect(car.SetGear(4)).toBe(true)
-        expect(car.SetSpeed(90)).toBe(true)
-        expect(car.SetGear(0)).toBe(true)
-        expect(car.SetGear(5)).toBe(true)
-        expect(car.SetSpeed(150)).toBe(true)
+    test('Try to set back gear while goind straight', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(15)
 
+        let isSetedGear = car.SetGear(-1)
+
+        expect(isSetedGear).toBe(false)
     })
 
-    test('Try to get max speed and underlimit gear', () => {
-        expect(car.SetSpeed(151)).toBe(false)
-        expect(car.SetGear(6)).toBe(false)
+    test('Try to set 2 gear', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(20)
+        car.SetGear(2)
+
+        isSecondGear = car.SetGear(2)
+
+        expect(isSecondGear).toBe(true)
     })
 
-    test('Try to turn off the car on speed', () => {
-        expect(car.TurnOffEngine()).toBe(true)
-        expect(car.TurnOnEngine()).toBe(true)
+    test('Try to set 3 gear', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(30)
+        car.SetGear(3)
+
+        isThirdGear = car.SetGear(3)
+
+        expect(isThirdGear).toBe(true)
     })
 
-    test('Try to get uncorrect gears for speed', () => {
-        expect(car.SetGear(4)).toBe(false)
-        expect(car.SetGear(3)).toBe(false)
-        expect(car.SetGear(2)).toBe(false)
-        expect(car.SetGear(1)).toBe(false)
-        expect(car.SetGear(0)).toBe(true)
-        expect(car.SetGear(-1)).toBe(false)
+    test('Try to set 3 gear for uncorrect speed for this', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(10)
+        car.SetGear(3)
+
+        isThirdGear = car.SetGear(3)
+
+        expect(isThirdGear).toBe(false)
     })
 
-    test('Try to get uncorrect speed for every gear', () => {
-        expect(car.SetSpeed(80)).toBe(true)
-        expect(car.SetGear(4)).toBe(true)
-        expect(car.SetSpeed(130)).toBe(false)
-        expect(car.SetSpeed(60)).toBe(true)
-        expect(car.SetGear(3)).toBe(true)
-        expect(car.SetSpeed(90)).toBe(false)
-        expect(car.SetSpeed(40)).toBe(true)
-        expect(car.SetGear(2)).toBe(true)
-        expect(car.SetSpeed(60)).toBe(false)
-        expect(car.SetSpeed(20)).toBe(true)
-        expect(car.SetGear(1)).toBe(true)
-        expect(car.SetSpeed(40)).toBe(false)
-        expect(car.SetSpeed(0)).toBe(true)
+    test('Try to set 4 gear', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(30)
+        car.SetGear(3)
+        car.SetSpeed(50)
+        car.SetGear(4)
+
+        isFourthGear = car.SetGear(4)
+
+        expect(isFourthGear).toBe(true)
     })
-    
+
+    test('Try to set 4 gear for uncorrect speed for this', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(30)
+        car.SetGear(4)
+
+        isFourthGear = car.SetGear(4)
+
+        expect(isFourthGear).toBe(false)
+    })
+
+    test('Try to set 5 gear', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(30)
+        car.SetGear(3)
+        car.SetSpeed(50)
+        car.SetGear(5)
+
+        isFifthGear = car.SetGear(5)
+
+        expect(isFifthGear).toBe(true)
+    })
+
+    test('Try to set 5 gear for uncorrect speed for this', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(30)
+        car.SetGear(5)
+
+        isFourthGear = car.SetGear(4)
+
+        expect(isFourthGear).toBe(false)
+    })
+
+    test('Try to set underflow speed', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(30)
+        car.SetGear(3)
+        car.SetSpeed(50)
+        car.SetGear(5)
+
+        isGetedSpeed = car.SetSpeed(151)
+
+        expect(isGetedSpeed).toBe(false)
+    })
+
+    test('Try to set uncorrect gear', () => {
+        car.TurnOnEngine()
+
+        isGearSeted = car.SetGear(12)
+
+        expect(isGearSeted).toBe(false)
+    })
+
+    test('Try to get maxspeed', () => {
+        car.TurnOnEngine()
+        car.SetGear(1)
+        car.SetSpeed(20)
+        car.SetGear(2)
+        car.SetSpeed(30)
+        car.SetGear(3)
+        car.SetSpeed(40)
+        car.SetGear(4)
+        car.SetSpeed(60)
+        car.SetGear(5)
+        car.SetSpeed(150)
+
+        let isGetMaxSpeed = car.SetSpeed(150)
+
+        expect(isGetMaxSpeed).toBe(true)
+    })
+
 })
 
 
