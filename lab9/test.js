@@ -65,7 +65,7 @@ async function deleteProduct(id) {
     return res
 }
 describe('Products API', () => {
-    //удаление после каждого
+
     afterEach(() => {
         addedIds.forEach(async (id) => {
             const resDel = await deleteProduct(id)
