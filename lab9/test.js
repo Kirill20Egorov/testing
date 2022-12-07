@@ -1,10 +1,10 @@
 ﻿// JavaScript source code
 
 const chai = require('chai');
-const chaiHttp = require('chai-http');
 const assert = chai.assert
 const baseUrl = 'http://shop.qatl.ru/api';
 const expect = chai.expect;
+const request = require('supertest')(baseUrl)
 
 const wrongCategoryId = require('./tests/invalid/wrongCategoryId')
 const wrongTitle = require('./tests/invalid/wrongTitle')
@@ -18,14 +18,9 @@ const wrongHit = require('./tests/invalid/wrongHit')
 
 const validProduct1 = require('./tests/valid/validProduct1')
 const validProduct2 = require('./tests/valid/validProduct2')
-const validProduct3 = require('./tests/valid/validProduct3')
-const validProduct4 = require('./tests/valid/validProduct4')
 
-const existingAliases = []
 let existingIds = []
 let addedIds = []
-const request = require('supertest')(baseUrl)
-const NON_EXISTING_ID = -1
 
 function checkFields(first, second) {
     assert(first.category_id == second.category_id, 'id не совпадают')
@@ -49,6 +44,9 @@ async function addProduct(product) {
 
 async function getProducts() {
     res = await request.get('/products')
+    res.body.forEach(product => {
+        existingIds.push(product.id)
+    })
     return res;
 }
 
@@ -73,19 +71,17 @@ describe('Products API', () => {
             const resDel = await deleteProduct(id)
         })
         addedIds = []
+        existingIds = []
     }); 
 
     it('Получение всех продуктов', async () => {
         const res = await getProducts();
         assert(res.status === 200, 'Ошибка сервера')
-        res.body.forEach(product => {
-            existingIds.push(product.id)
-        })
         assert(res.status == 200, 'Ошибка сервера')
         assert(existingIds != [], 'Не получено ни одного товара')
     })
 
-    it('Добавление продукта и проверка полей', async () => {
+    it('Добавление продукта и проверка его полей', async () => {
         const res = await addProduct(validProduct1)
 
         let addedPr
@@ -118,7 +114,7 @@ describe('Products API', () => {
         })
         assert(currProduct.id == currId, 'id добавленного продукта не соотетствует id продукта, который был изменен');
         checkFields(currProduct, editData)
-    })
+    })     
     
     it('Проверка поля alias', async () => {
         const firstRes = await addProduct(validProduct1);
@@ -136,7 +132,7 @@ describe('Products API', () => {
 
         assert(first.alias == "apple-watch-series-7", "Сгенерирован неверный alias");
         assert(second.alias == "apple-watch-series-7-0", "Сгенерирован неверный alias для второго такого же title");
-        assert(third.alias == "apple-watch-series-7-0-0", "Сгенерирxован неверный alias для третьего такого же title");
+        assert(third.alias == "apple-watch-series-7-0-0", "Сгенерирован неверный alias для третьего такого же title");
     })
     
     it('Добавление продуктов с невалидными значениями', async () => {
@@ -166,19 +162,20 @@ describe('Products API', () => {
         assert(res.status == 200, 'Ошибка сервера')
 
         const allProducts = await getProducts();
-        
+
+        //при вызове addProduct(product) в addedIds добавляется id 
         allProducts.body.forEach(product => {
             assert(!(addedIds.includes(product.id)), 'В список товаров был добавлен невалидный товар')
         })
     })
     
-    it('Удаление несществующего товара', async () => {
+    it('Удаление несуществующего товара', async () => {
         const awayId = 555;
         const res = await deleteProduct(awayId);
         assert(existingIds != [])
-        assert(!(existingIds.includes(awayId)), "Товар с таким id существует в списке товаров")
-        assert(res.status == 200, "Ошибка сервера")
-        assert(res.body.status == 0, "Статус 1");
+        assert(!(existingIds.includes(awayId)), 'Товар с таким id существует в списке товаров')
+        assert(res.status == 200, 'Ошибка сервера')
+        assert(res.body.status == 0, 'Статус 1');
     })
     
     it('Редактирование несуществующего товара', async () => {
@@ -228,7 +225,4 @@ describe('Products API', () => {
         assert(editedProduct.category_id != wrongCategoryId.category_id, 'Продукт изменен на невалидный categoryId')
     })
 
-
-
-    //
 }) 
