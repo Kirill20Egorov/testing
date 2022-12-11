@@ -105,6 +105,21 @@ describe('Products API', () => {
         assert(addedPr, 'Продукт не существует')
         checkFields(addedPr, validProduct1)
     })
+
+
+    it('Удаление продукта после его добавления', async () => {
+        const res = await req.addProduct(validProduct1)
+        let products = await req.getProducts()
+        let addedPr = products.body.find(product => product.id == res.body.id);
+        assert(addedPr, 'Продукт не добавился')
+        const delRes = await req.deleteProduct(addedPr.id)
+        products = await req.getProducts()
+        let deletedPr = products.body.find(product => product.id == res.body.id);
+        assert(res.body.status === 1, 'Статус 0')
+        assert(res.status === 200, 'Ошибка сервера')
+        assert(!deletedPr, 'Продукт не удалился')
+    })
+
     
     it('Редактирование добавленного продукта и проверка правильности измененных полей', async () => {
         const editData = validProduct2
