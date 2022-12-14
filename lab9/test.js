@@ -46,7 +46,7 @@ describe('Products API', () => {
             const resDel = await req.deleteProduct(id)
         })
     }); 
-   
+    
     it('Получение всех продуктов', async () => {
         const res = await req.getProducts();
         assert(res.status == 200, 'Ошибка сервера')

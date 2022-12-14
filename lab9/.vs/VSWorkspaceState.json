@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\tests",
+    "\\tests\\valid"
   ],
-  "SelectedNode": "\\apirequests.js",
+  "SelectedNode": "\\tests\\valid\\validProduct1.js",
   "PreviewInSolutionExplorer": false
 }
