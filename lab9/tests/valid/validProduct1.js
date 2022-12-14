@@ -1,6 +1,6 @@
 module.exports = {
     "category_id": "5",
-    "title": "Apple watch series 7",
+    "title": "Apple watch se",
     "content": "apple",
     "price": "100",
     "old_price": "50",
